@@ -1,0 +1,31 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "",
+                "Name": "x211321"
+            }
+        ],
+        "Category": "",
+        "Description": "Control Acer RGB Settings",
+        "Description[de]": "Steuer Acer RGB Einstellungen",
+        "EnabledByDefault": true,
+        "FormFactors": [
+            "desktop"
+        ],
+        "Icon": "YES",
+        "Id": "com.github.x211321.rgb-config-acer-gkbbl-0-plasma-widget",
+        "License": "MIT",
+        "Name": "RGB Config (Acer)",
+        "Name[de]": "RGB Konfiguration (Acer)",
+        "ServiceTypes": [
+            "Plasma/Applet"
+        ],
+        "Version": "0.1.4",
+        "Website": "https://github.com/x211321/RGB-Config-Acer-gkbbl-0-Plasma-Widget"
+    },
+    "X-Plasma-NotificationArea": "true",
+    "X-Plasma-NotificationAreaCategory": "Hardware",
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

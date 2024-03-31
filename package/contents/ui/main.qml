@@ -1,17 +1,19 @@
 // main.qml
 import QtQuick 2.4
 import QtQuick.Layouts 1.0
-import QtQuick.Dialogs 1.1
+import QtQuick.Dialogs
 import QtQuick.Controls.Universal 2.12
 
-import org.kde.plasma.components 3.0 as PlasmaComponents
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
+import org.kde.plasma.plasma5support as Plasma5Support
 
-import QtGraphicalEffects 1.0
+// import Qt5Compat.QtGraphicalEffects
 
 
-Item {
+PlasmoidItem {
     id: root
 
     property string icon: Qt.resolvedUrl("rgbconfig.svg")
@@ -45,26 +47,26 @@ Item {
     //###################
     // COMPACT
     //-------------------
-    Plasmoid.compactRepresentation: Item {
-        PlasmaCore.IconItem {
+    compactRepresentation: Item {
+        Kirigami.Icon {
             id: compact
             anchors.fill: parent
             source: icon
             antialiasing: true
         }
-        ColorOverlay {
-            anchors.fill: compact
-            source: compact
-            color: plasmoid.configuration.customIconColor
-            antialiasing: true
-        }
+        // ColorOverlay {
+        //     anchors.fill: compact
+        //     source: compact
+        //     color: plasmoid.configuration.customIconColor
+        //     antialiasing: true
+        // }
     }
 
 
     //###################
     // FULL
     //-------------------
-    Plasmoid.fullRepresentation: ColumnLayout {
+    fullRepresentation: ColumnLayout {
 
         spacing: 5
 
@@ -136,7 +138,7 @@ Item {
             plasmoid.configuration.colors = colors
 
             // Apply RGB settings
-            // - run included python script via PlasmaCode.DataSource
+            // - run included python script via Plasma5Support.DataSource
             var scriptPath = plasmoid.metaData.fileName.split("/").slice(0, -1).join("/")+"/contents/scripts/"
             command.exec(
                 "python3 " + scriptPath + "applyRGBSettings.py" +
@@ -149,7 +151,7 @@ Item {
         }
 
 
-        PlasmaCore.DataSource {
+        Plasma5Support.DataSource {
             id: command
             engine: "executable"
             connectedSources: []
@@ -185,12 +187,12 @@ Item {
                         case 1:
                             errorTitle   = i18n("RGB config (Acer): Character device not available")
                             errorMessage = i18n("The character device at /dev/acer-gkbbl-0 is not available. Please make sure the necessary kernel module is installed and loaded.")
-                            errorMessageDialog.open()
+                            // errorMessageDialog.open()
                             break;
                         case 2:
                             errorTitle   = i18n("RGB config (Acer): Static character device not available")
                             errorMessage = i18n("The character device at /dev/acer-gkbbl-static-0 is not available. Please make sure the necessary kernel module is installed and loaded.")
-                            errorMessageDialog.open()
+                            // errorMessageDialog.open()
                             break;
                     } 
                 } else {
@@ -429,7 +431,7 @@ Item {
                     ColorDialog {
                         id: colorPicker
                         title: i18n("Color section " + (index+1))
-                        color: colorRect.color
+                        //  color: colorRect.color
                         onAccepted: {
                             colorRect.color = color
                             updateRGBMode(true)

@@ -5,34 +5,36 @@ import org.kde.kquickcontrols 2.0 as KQuickControls
 import org.kde.kirigami 2.4 as Kirigami
 import org.kde.kquickcontrols 2.0 as KQControls
 
-Kirigami.FormLayout {
-    id: page
-    property alias cfg_customIconColor: customIconColor.color
-    property alias cfg_showHeader: showHeader.checked
-    property alias cfg_applyOnStartup: applyOnStartup.checked
+KCM.SimpleKCM {
+    Kirigami.FormLayout {
+        id: page
+        property alias cfg_customIconColor: customIconColor.color
+        property alias cfg_showHeader: showHeader.checked
+        property alias cfg_applyOnStartup: applyOnStartup.checked
 
-    RowLayout {
-        Kirigami.FormData.label:i18n("Show header:")
+        RowLayout {
+            Kirigami.FormData.label:i18n("Show header:")
 
-        QtControls.CheckBox {
-            id: showHeader
+            QtControls.CheckBox {
+                id: showHeader
+            }
         }
-    }
 
-    RowLayout {
-        Kirigami.FormData.label:i18n("Apply last settings on startup:")
+        RowLayout {
+            Kirigami.FormData.label:i18n("Apply last settings on startup:")
 
-        QtControls.CheckBox {
-            id: applyOnStartup
+            QtControls.CheckBox {
+                id: applyOnStartup
+            }
         }
-    }
 
-    RowLayout {
-        Kirigami.FormData.label:i18n("Tray icon color:")
+        RowLayout {
+            Kirigami.FormData.label:i18n("Tray icon color:")
 
-        KQuickControls.ColorButton {
-            id: customIconColor
+            KQuickControls.ColorButton {
+                id: customIconColor
+            }
         }
-    }
 
+    }
 }
