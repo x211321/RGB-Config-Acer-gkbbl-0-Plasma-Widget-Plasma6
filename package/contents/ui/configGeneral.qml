@@ -5,7 +5,7 @@ import org.kde.kquickcontrols 2.0 as KQuickControls
 import org.kde.kirigami 2.4 as Kirigami
 import org.kde.kquickcontrols 2.0 as KQControls
 
-KCM.SimpleKCM {
+
     Kirigami.FormLayout {
         id: page
         property alias cfg_customIconColor: customIconColor.color
@@ -37,4 +37,4 @@ KCM.SimpleKCM {
         }
 
     }
-}
+
