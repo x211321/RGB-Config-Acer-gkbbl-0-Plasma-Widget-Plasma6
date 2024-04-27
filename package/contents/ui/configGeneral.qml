@@ -1,9 +1,9 @@
-import QtQuick 2.0
-import QtQuick.Layouts 1.0
-import QtQuick.Controls 2.5 as QtControls
-import org.kde.kquickcontrols 2.0 as KQuickControls
-import org.kde.kirigami 2.4 as Kirigami
-import org.kde.kquickcontrols 2.0 as KQControls
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls as QtControls
+import org.kde.kquickcontrols as KQuickControls
+import org.kde.kirigami as Kirigami
+import org.kde.kquickcontrols as KQControls
 
 
     Kirigami.FormLayout {
