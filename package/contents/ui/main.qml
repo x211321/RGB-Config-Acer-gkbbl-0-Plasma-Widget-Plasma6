@@ -1,8 +1,9 @@
 // main.qml
-import QtQuick 2.4
-import QtQuick.Layouts 1.0
-import QtQuick.Dialogs
-import QtQuick.Controls.Universal 2.12
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import Qt.labs.platform
+
 
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.plasmoid
@@ -10,7 +11,7 @@ import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasma5support as Plasma5Support
 
-// import Qt5Compat.QtGraphicalEffects
+ import Qt5Compat.GraphicalEffects
 
 
 PlasmoidItem {
@@ -54,12 +55,12 @@ PlasmoidItem {
             source: icon
             antialiasing: true
         }
-        // ColorOverlay {
-        //     anchors.fill: compact
-        //     source: compact
-        //     color: plasmoid.configuration.customIconColor
-        //     antialiasing: true
-        // }
+        ColorOverlay {
+            anchors.fill: compact
+            source: compact
+            color: plasmoid.configuration.customIconColor
+            antialiasing: true
+        }
     }
 
 
@@ -146,7 +147,8 @@ PlasmoidItem {
                 " -b " + brightnessSlider.value + 
                 " -s " + speedSlider.value + 
                 " -d " + (directionRadioLeftRight.checked ? 1 : 0) + 
-                " -c " + colors.map(function(color){return color.replace("#", "")})
+                " -c " + colors.map(function(color){return color.replace("#", "")}) +
+                "  # " + Math.random() // Workaround to introduce change and make the datasource execute
             );
         }
 
@@ -187,12 +189,12 @@ PlasmoidItem {
                         case 1:
                             errorTitle   = i18n("RGB config (Acer): Character device not available")
                             errorMessage = i18n("The character device at /dev/acer-gkbbl-0 is not available. Please make sure the necessary kernel module is installed and loaded.")
-                            // errorMessageDialog.open()
+                            errorMessageDialog.open()
                             break;
                         case 2:
                             errorTitle   = i18n("RGB config (Acer): Static character device not available")
                             errorMessage = i18n("The character device at /dev/acer-gkbbl-static-0 is not available. Please make sure the necessary kernel module is installed and loaded.")
-                            // errorMessageDialog.open()
+                            errorMessageDialog.open()
                             break;
                     } 
                 } else {
@@ -241,7 +243,7 @@ PlasmoidItem {
                 height: labelHeight
             }
             
-            PlasmaComponents.ComboBox {
+            ComboBox {
                 id: comboboxRGBMode
                 textRole: "text"
                 valueRole: "value"
@@ -431,7 +433,7 @@ PlasmoidItem {
                     ColorDialog {
                         id: colorPicker
                         title: i18n("Color section " + (index+1))
-                        //  color: colorRect.color
+                        color: colorRect.color
                         onAccepted: {
                             colorRect.color = color
                             updateRGBMode(true)
