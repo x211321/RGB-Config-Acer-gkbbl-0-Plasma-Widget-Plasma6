@@ -48,13 +48,22 @@ PlasmoidItem {
     //###################
     // COMPACT
     //-------------------
-    compactRepresentation: Item {
+    compactRepresentation: MouseArea {
+        id: compactRoot
+
+        onClicked: root.expanded = !root.expanded
+
+        Component.onCompleted: {
+            updateRGBMode(plasmoid.configuration.applyOnStartup)    
+        }
+
         Kirigami.Icon {
             id: compact
             anchors.fill: parent
             source: icon
             antialiasing: true
         }
+
         ColorOverlay {
             anchors.fill: compact
             source: compact
@@ -68,6 +77,7 @@ PlasmoidItem {
     // FULL
     //-------------------
     fullRepresentation: ColumnLayout {
+        id: fullRoot
 
         spacing: 5
 
