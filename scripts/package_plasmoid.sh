@@ -3,7 +3,10 @@
 cd "${0%/*}"
 cd ..
 
-version=$(awk -F "=" '/X-KDE-PluginInfo-Version/ {print $2}' ./package/metadata.desktop)
+version=$(awk -F ":" '/"Version"/ {print $2}' ./package/metadata.json)
+version=${version//\"}
+version=${version//,}
+version=${version// }
 
 rm ./scripts/RGB-Config-Acer_$version.plasmoid
 zip -r ./scripts/RGB-Config-Acer_$version.plasmoid ./package -x ./package/translate/\*
