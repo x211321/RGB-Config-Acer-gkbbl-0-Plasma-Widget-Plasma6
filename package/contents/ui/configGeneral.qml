@@ -29,7 +29,7 @@ import org.kde.kquickcontrols as KQControls
         }
 
         RowLayout {
-            Kirigami.FormData.label:i18n("Tray icon color:")
+            Kirigami.FormData.label:i18n("Icon color:")
 
             KQuickControls.ColorButton {
                 id: customIconColor
