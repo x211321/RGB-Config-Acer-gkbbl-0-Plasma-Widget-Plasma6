@@ -5,6 +5,9 @@ Visit JafarAkhondali's [project page](https://github.com/JafarAkhondali/acer-pre
 
 For a non-KDE solution and additional functionality check out my [other project](https://github.com/x211321/RGB-Config-Acer-gkbbl-0/)
 
+**⚠ This version of the widget is for Plasma 6, please use the [previous version](https://github.com/x211321/RGB-Config-Acer-gkbbl-0-Plasma-Widget) if you are running Plasma 5.**
+
+
 ![Main window](./screenshots/plasma_widget_tray.png)
 
 # Features
@@ -78,6 +81,8 @@ Display a label at the top of the widget displaying the widget name.
 
 ## Apply last settings on startup
 Automatically apply the last used RGB settings when the widget is started. This way the RGB settings are automatically restored when you log into KDE Plasma.
+
+**Known bug:** Currently not functional when the widget is placed in the system tray.
 
 ## Tray icon color
 I've not yet figured out how to integrate the icon color with the active color theme. For now this option allows you to adjust the icon color manually. 
