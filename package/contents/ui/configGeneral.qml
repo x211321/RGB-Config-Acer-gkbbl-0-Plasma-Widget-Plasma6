@@ -8,6 +8,7 @@ import org.kde.kquickcontrols as KQControls
 
     Kirigami.FormLayout {
         id: page
+        property alias cfg_useCustomIconColor: useCustomIconColor.checked
         property alias cfg_customIconColor: customIconColor.color
         property alias cfg_showHeader: showHeader.checked
         property alias cfg_applyOnStartup: applyOnStartup.checked
@@ -29,7 +30,15 @@ import org.kde.kquickcontrols as KQControls
         }
 
         RowLayout {
-            Kirigami.FormData.label:i18n("Icon color:")
+            Kirigami.FormData.label:i18n("Use custom icon color:")
+
+            QtControls.CheckBox {
+                id: useCustomIconColor
+            }
+        }
+
+        RowLayout {
+            Kirigami.FormData.label:i18n("Custom icon color:")
 
             KQuickControls.ColorButton {
                 id: customIconColor

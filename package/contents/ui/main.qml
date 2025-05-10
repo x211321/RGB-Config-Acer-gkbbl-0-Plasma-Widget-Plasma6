@@ -68,7 +68,7 @@ PlasmoidItem {
         ColorOverlay {
             anchors.fill: compact
             source: compact
-            color: plasmoid.configuration.customIconColor
+            color: (plasmoid.configuration.useCustomIconColor ? plasmoid.configuration.customIconColor : Kirigami.Theme.textColor)
             antialiasing: true
         }
     }
