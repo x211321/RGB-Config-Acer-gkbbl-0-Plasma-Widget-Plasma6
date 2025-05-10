@@ -82,5 +82,5 @@ Display a label at the top of the widget displaying the widget name.
 ## Apply last settings on startup
 Automatically apply the last used RGB settings when the widget is started. This way the RGB settings are automatically restored when you log into KDE Plasma.
 
-## Tray icon color
-I've not yet figured out how to integrate the icon color with the active color theme. For now this option allows you to adjust the icon color manually. 
+## Use custom icon color / Custom icon color
+Allows you to change the tray icon color manually. 
