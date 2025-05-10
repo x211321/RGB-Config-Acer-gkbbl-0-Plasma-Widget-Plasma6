@@ -4,14 +4,13 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Qt.labs.platform
 
-
 import org.kde.plasma.components as PlasmaComponents
 import org.kde.plasma.plasmoid
 import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.plasma5support as Plasma5Support
 
- import Qt5Compat.GraphicalEffects
+import Qt5Compat.GraphicalEffects
 
 
 PlasmoidItem {
@@ -54,7 +53,9 @@ PlasmoidItem {
         onClicked: root.expanded = !root.expanded
 
         Component.onCompleted: {
-            updateRGBMode(plasmoid.configuration.applyOnStartup)    
+            if (plasmoid.configuration.applyOnStartup) {
+                applyRGBSettings()
+            }
         }
 
         Kirigami.Icon {
@@ -73,6 +74,7 @@ PlasmoidItem {
     }
 
 
+
     //###################
     // FULL
     //-------------------
@@ -82,7 +84,7 @@ PlasmoidItem {
         spacing: 5
 
         Component.onCompleted: {
-            updateRGBMode(plasmoid.configuration.applyOnStartup)    
+            updateRGBMode(plasmoid.configuration.applyOnStartup)
         }
 
         function updateRGBMode(apply = false) {
@@ -105,7 +107,7 @@ PlasmoidItem {
                 }else{
                     colorRepeater.itemAt(i).visible = false
                 }
-                
+
                 // Set text colors according to the selected background color
                 var r = parseInt(colorRepeater.itemAt(i).color.toString().substring(1, 3), 16)
                 var g = parseInt(colorRepeater.itemAt(i).color.toString().substring(3, 5), 16)
@@ -127,11 +129,12 @@ PlasmoidItem {
             }
 
             if (apply) {
-                applyRGBSettings()
+                updateRGBSettings()
             }
         }
 
-        function applyRGBSettings() {
+
+        function updateRGBSettings() {
 
             // Save configuration
             plasmoid.configuration.mode       = comboboxRGBMode.currentValue
@@ -139,7 +142,7 @@ PlasmoidItem {
             plasmoid.configuration.speed      = speedSlider.value
             plasmoid.configuration.leftRight  = directionRadioLeftRight.checked
             plasmoid.configuration.rightLeft  = directionRadioRightLeft.checked
-            
+
             var colors = []
 
             for (var i = 0; i < colorRepeater.count; i++) {
@@ -148,75 +151,8 @@ PlasmoidItem {
 
             plasmoid.configuration.colors = colors
 
-            // Apply RGB settings
-            // - run included python script via Plasma5Support.DataSource
-            var scriptPath = plasmoid.metaData.fileName.split("/").slice(0, -1).join("/")+"/contents/scripts/"
-            command.exec(
-                "python3 " + scriptPath + "applyRGBSettings.py" +
-                " -m " + comboboxRGBMode.currentValue + 
-                " -b " + brightnessSlider.value + 
-                " -s " + speedSlider.value + 
-                " -d " + (directionRadioLeftRight.checked ? 1 : 0) + 
-                " -c " + colors.map(function(color){return color.replace("#", "")}) +
-                "  # " + Math.random() // Workaround to introduce change and make the datasource execute
-            );
+            applyRGBSettings()
         }
-
-
-        Plasma5Support.DataSource {
-            id: command
-            engine: "executable"
-            connectedSources: []
-            onNewData: {
-                var stdout = data["stdout"]
-                var stderr = data["stderr"]
-                commandExecuted(sourceName, stdout, stderr)
-                disconnectSource(sourceName)
-            }
-            
-            function exec(cmd) {
-                connectSource(cmd)
-            }
-
-            signal commandExecuted(string sourceName, string stdout, string stderr)
-        }
-
-        MessageDialog {
-            id: errorMessageDialog
-            title: errorTitle
-            text: errorMessage
-        }
-
-        Connections {
-            target: command
-            function onCommandExecuted(command, stdout, stderr) {
-                // console.log("CMD: ", command)
-                // console.log("OUT: ", stdout)
-                // console.log("ERR: ", stderr)
-
-                if (parseInt(stdout)) {
-                    switch(parseInt(stdout)) {
-                        case 1:
-                            errorTitle   = i18n("RGB config (Acer): Character device not available")
-                            errorMessage = i18n("The character device at /dev/acer-gkbbl-0 is not available. Please make sure the necessary kernel module is installed and loaded.")
-                            errorMessageDialog.open()
-                            break;
-                        case 2:
-                            errorTitle   = i18n("RGB config (Acer): Static character device not available")
-                            errorMessage = i18n("The character device at /dev/acer-gkbbl-static-0 is not available. Please make sure the necessary kernel module is installed and loaded.")
-                            errorMessageDialog.open()
-                            break;
-                    } 
-                } else {
-                    if (stderr.length) {
-                        errorTitle   = i18n("RGB config (Acer): Unexpected error")
-                        errorMessage = stderr
-                        errorMessageDialog.open()
-                    }
-                }
-            }
-        }
-
 
 
         //###################
@@ -252,7 +188,7 @@ PlasmoidItem {
                 width: labelWidth
                 height: labelHeight
             }
-            
+
             ComboBox {
                 id: comboboxRGBMode
                 textRole: "text"
@@ -295,7 +231,7 @@ PlasmoidItem {
                 to: 100
                 value: plasmoid.configuration.brightness
                 stepSize: 5
-                onMoved: applyRGBSettings()
+                onMoved: updateRGBSettings()
             }
 
             PlasmaComponents.Label {
@@ -341,7 +277,7 @@ PlasmoidItem {
                 to: 9
                 value: plasmoid.configuration.speed
                 stepSize: 1
-                onMoved: applyRGBSettings()
+                onMoved: updateRGBSettings()
             }
 
             PlasmaComponents.Label {
@@ -373,7 +309,7 @@ PlasmoidItem {
             spacing: labelSpacing
 
             PlasmaComponents.Label {width: labelMargin}
-            
+
             PlasmaComponents.Label {
                 text: i18n("Direction")
                 width: labelWidth
@@ -385,7 +321,7 @@ PlasmoidItem {
                 text: i18n("Left to right")
                 checked: plasmoid.configuration.leftRight
                 autoExclusive: true
-                onClicked: applyRGBSettings()
+                onClicked: updateRGBSettings()
             }
 
             PlasmaComponents.RadioButton {
@@ -393,7 +329,7 @@ PlasmoidItem {
                 text: i18n("Right to left")
                 checked: plasmoid.configuration.rightLeft
                 autoExclusive: true
-                onClicked: applyRGBSettings()
+                onClicked: updateRGBSettings()
             }
 
             PlasmaComponents.Label {width: labelMargin}
@@ -470,7 +406,7 @@ PlasmoidItem {
             }
 
             PlasmaComponents.Label {width: labelMargin}
-            
+
         }
 
         //###################
@@ -481,6 +417,81 @@ PlasmoidItem {
                 text: ""
                 width: labelWidth
                 height: labelHeight/2
+            }
+        }
+    }
+
+
+
+    function applyRGBSettings() {
+
+        // Apply RGB settings
+        // - run included python script via Plasma5Support.DataSource
+        var scriptPath = plasmoid.metaData.fileName.split("/").slice(0, -1).join("/")+"/contents/scripts/"
+        command.exec(
+            "python3 " + scriptPath + "applyRGBSettings.py" +
+            " -m " + plasmoid.configuration.mode +
+            " -b " + plasmoid.configuration.brightness +
+            " -s " + plasmoid.configuration.speed +
+            " -d " + (plasmoid.configuration.leftRight ? 1 : 0) +
+            " -c " + plasmoid.configuration.colors.map(function(color){return color.replace("#", "")}) +
+            "  # " + Math.random() // Workaround to introduce change and make the datasource execute
+        );
+    }
+
+
+    Plasma5Support.DataSource {
+        id: command
+        engine: "executable"
+        connectedSources: []
+        onNewData: {
+            var stdout = data["stdout"]
+            var stderr = data["stderr"]
+            commandExecuted(sourceName, stdout, stderr)
+            disconnectSource(sourceName)
+        }
+
+        function exec(cmd) {
+            connectSource(cmd)
+        }
+
+        signal commandExecuted(string sourceName, string stdout, string stderr)
+    }
+
+
+    MessageDialog {
+        id: errorMessageDialog
+        title: errorTitle
+        text: errorMessage
+    }
+
+
+    Connections {
+        target: command
+        function onCommandExecuted(command, stdout, stderr) {
+            // console.log("CMD: ", command)
+            // console.log("OUT: ", stdout)
+            // console.log("ERR: ", stderr)
+
+            if (parseInt(stdout)) {
+                switch(parseInt(stdout)) {
+                    case 1:
+                        errorTitle   = i18n("RGB config (Acer): Character device not available")
+                        errorMessage = i18n("The character device at /dev/acer-gkbbl-0 is not available. Please make sure the necessary kernel module is installed and loaded.")
+                        errorMessageDialog.open()
+                        break;
+                    case 2:
+                        errorTitle   = i18n("RGB config (Acer): Static character device not available")
+                        errorMessage = i18n("The character device at /dev/acer-gkbbl-static-0 is not available. Please make sure the necessary kernel module is installed and loaded.")
+                        errorMessageDialog.open()
+                        break;
+                }
+            } else {
+                if (stderr.length) {
+                    errorTitle   = i18n("RGB config (Acer): Unexpected error")
+                    errorMessage = stderr
+                    errorMessageDialog.open()
+                }
             }
         }
     }
